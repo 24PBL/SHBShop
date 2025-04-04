@@ -211,7 +211,7 @@ def check_personal_auth_code():
         new_vaild4p = Vaild4pjoin(email=email, authCode=authCode)
         db.session.add(new_vaild4p)
         db.session.commit()
-        return jsonify({"message": "{이메일 인증 성공"}), 200
+        return jsonify({"message": "이메일 인증 성공"}), 200
     else:
         return jsonify({"message": "인증번호가 올바르지 않습니다."}), 400
     
@@ -341,7 +341,7 @@ def check_commercial_auth_code():
         new_vaild4c = Vaild4cjoin(email=email, authCode=authCode)
         db.session.add(new_vaild4c)
         db.session.commit()
-        return jsonify({"message": "{이메일 인증 성공"}), 200
+        return jsonify({"message": "이메일 인증 성공"}), 200
     else:
         return jsonify({"message": "인증번호가 올바르지 않습니다."}), 400
     
@@ -586,7 +586,7 @@ def check_auth_code_4_fpw():
         
         db.session.add(new_vaild)
         db.session.commit()
-        return jsonify({"message": "{이메일 인증 성공"}), 200
+        return jsonify({"message": "이메일 인증 성공"}), 200
     else:
         return jsonify({"message": "인증번호가 올바르지 않습니다."}), 400
     
