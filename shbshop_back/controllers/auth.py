@@ -517,9 +517,9 @@ def check_info_4_fpw():
         code = random.randint(100000, 999999)
 
         if kind == UserType.PERSONAL.value:
-            new_auth4fpw = Auth4pfpw(email=email, authCode = code)
+            new_auth4fpw = Auth4pfpw(email=email, authCode = code, name=name, birth=birth, tel=tel)
         elif kind == UserType.COMMERCIAL.value:
-            new_auth4fpw = Auth4cfpw(email=email, authCode = code)
+            new_auth4fpw = Auth4cfpw(email=email, authCode = code, name=name, birth=birth, tel=tel)
         else:
             return jsonify({"error": "잘못된 유저 유형"}), 404
 
