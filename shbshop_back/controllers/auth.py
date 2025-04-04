@@ -255,7 +255,7 @@ def personal_signup():
 
         profile_url = f"/{P_PROFILE_UPLOAD_FOLDER}/{filename}"
 
-        region = address.split()[0] + address.split()[1]
+        region = address.split()[0] + "-" + address.split()[1]
 
         new_user = Personal(
             name=name,
