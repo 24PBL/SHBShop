@@ -24,7 +24,7 @@ class Commercialcert(Base):
     email: Mapped[str] = mapped_column(String(255))
     businessEmail: Mapped[str] = mapped_column(String(255))
     address: Mapped[str] = mapped_column(String(255))
-    coNumber: Mapped[int] = mapped_column(Integer)
+    coNumber: Mapped[str] = mapped_column(String(255))
     licence: Mapped[str] = mapped_column(String(255))
     reason: Mapped[str] = mapped_column(String(255), server_default=text("'심사중'"))
     state: Mapped[int] = mapped_column(Integer, server_default=text("1"))

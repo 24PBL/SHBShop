@@ -357,6 +357,7 @@ def commercial_signup():
     password = request.form.get("password")
     nickname = request.form.get("nickname")
     address = request.form.get("address")
+    coNumber = request.form.get("coNumber")
     imgfile = request.files.get("imgfile")
     licence = request.files.get("licence")
 
@@ -364,11 +365,6 @@ def commercial_signup():
         authCode = int(request.form.get("authCode"))
     except (TypeError, ValueError):
         return jsonify({"error": "잘못된 인증코드 형식입니다."}), 400
-    
-    try:
-        coNumber = int(request.form.get("coNumber"))
-    except (TypeError, ValueError):
-        return jsonify({"error": "잘못된 사업자 번호입니다."}), 400
 
     if not all([name, presidentName, businessmanName, birth, tel, email, businessEmail, password, nickname, address, authCode, imgfile, licence, coNumber]):
         return jsonify({"error": "모든 정보를 입력해주세요."}), 400
@@ -578,7 +574,7 @@ def check_auth_code_4_fpw():
         if kind == UserType.PERSONAL.value:
             delete_all_auth_code_4_fpw(UserType.PERSONAL.value, email)
             new_vaild = Vaild4pfpw(email=email, authCode=authCode)
-        elif kind == UserType.COMMERCIAL:
+        elif kind == UserType.COMMERCIAL.value:
             delete_all_auth_code_4_fpw(UserType.COMMERCIAL.value, email)
             new_vaild = Vaild4cfpw(email=email, authCode=authCode)
         else:
@@ -607,7 +603,7 @@ def change_pw():
         exUser = db.session.query(Personal).filter_by(email = email).first()
         vaild = db.session.query(Vaild4pfpw).filter_by(email=email).order_by(desc(Vaild4pfpw.idx)).first()
     elif kind == UserType.COMMERCIAL.value:
-        exUser = db.session.query(Commercial).filter_by(naemail = email).first()
+        exUser = db.session.query(Commercial).filter_by(email = email).first()
         vaild = db.session.query(Vaild4cfpw).filter_by(email=email).order_by(desc(Vaild4cfpw.idx)).first()
     else:
         return jsonify({"error": "잘못된 유저 유형"}), 404

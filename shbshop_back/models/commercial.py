@@ -21,7 +21,7 @@ class Commercial(Base):
     password: Mapped[str] = mapped_column(String(255))
     nickname: Mapped[str] = mapped_column(String(64))
     address: Mapped[str] = mapped_column(String(255))
-    coNumber: Mapped[int] = mapped_column(Integer)
+    coNumber: Mapped[str] = mapped_column(String(255))
     licence: Mapped[str] = mapped_column(String(255))
     state: Mapped[int] = mapped_column(Integer, server_default=text("'1'"))
     createAt: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=text('CURRENT_TIMESTAMP'))
