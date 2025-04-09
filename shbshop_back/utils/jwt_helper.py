@@ -11,11 +11,10 @@ class UserType(Enum):
     COMMERCIAL = 2,
     ADMIN = 3
 
-def generate_jwt(user_id, user_type, nickname):
+def generate_jwt(user_id, user_type):
     payload = {
         "user_id": user_id,
-        "user_type": user_type,
-        "nickname": nickname,
+        "user_type": user_type
     }
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
