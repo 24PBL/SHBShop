@@ -334,7 +334,7 @@ def add_cbook():
     return jsonify({"message": "책 추가 완료"}), 201
 
 @test_bp.route("/add-sbook", methods=["POST"])
-def add_cbook():
+def add_sbook():
     sid = request.form.get("sid")
     sid = int(sid)
     title = request.form.get("title")

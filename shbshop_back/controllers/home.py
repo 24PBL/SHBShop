@@ -272,7 +272,7 @@ def search_book(decoded_user_id, user_type, userId):
 
 @home_bp.route("/<int:userId>/search-book/more-book/<int:pfinidx>/<int:cfinidx>", methods=["GET"])
 @token_required
-def search_book(decoded_user_id, user_type, userId, pfinidx, cfinidx):
+def search_more_book(decoded_user_id, user_type, userId, pfinidx, cfinidx):
     if str(decoded_user_id) != str(userId):
         return jsonify({"error": "권한이 없습니다."}), 403
     
@@ -355,7 +355,7 @@ def search_book(decoded_user_id, user_type, userId, pfinidx, cfinidx):
 
 @home_bp.route("/<int:userId>/search-book/more-sbook/<int:sfinidx>", methods=["GET"])
 @token_required
-def search_book(decoded_user_id, user_type, userId, sfinidx):
+def search_more_sbook(decoded_user_id, user_type, userId, sfinidx):
     if str(decoded_user_id) != str(userId):
         return jsonify({"error": "권한이 없습니다."}), 403
     
@@ -401,7 +401,7 @@ def search_book(decoded_user_id, user_type, userId, sfinidx):
 
 @home_bp.route("/<int:userId>/shop-mode/main", methods=["GET"])
 @token_required
-def search_book(decoded_user_id, user_type, userId):
+def get_shop_main(decoded_user_id, user_type, userId):
     if str(decoded_user_id) != str(userId):
         return jsonify({"error": "권한이 없습니다."}), 403
     
