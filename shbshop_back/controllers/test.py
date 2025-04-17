@@ -21,6 +21,10 @@ P_PROFILE_UPLOAD_FOLDER = "static/user/personal"
 C_PROFILE_UPLOAD_FOLDER = "static/user/commercial"
 S_IMAGE_UPLOAD_FOLDER = "static/shop"
 LICENCE_UPLOAD_FOLDER = "static/licence"
+PBOOK_UPLOAD_FOLDER = "static/product/personal"
+CBOOK_UPLOAD_FOLDER = "static/product/commercial"
+SBOOK_UPLOAD_FOLDER = "static/product/shop"
+
 
 @test_bp.route("/add-personal", methods=["POST"])
 def add_personal():
@@ -242,13 +246,13 @@ def add_pbook():
     imgfile3 = request.files.get("imgfile3")
     
     filename1 = secure_filename(f"{uuid4().hex}_{imgfile1.filename}")
-    save_path1 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename1)
+    save_path1 = os.path.join(PBOOK_UPLOAD_FOLDER, filename1)
 
     filename2 = secure_filename(f"{uuid4().hex}_{imgfile2.filename}")
-    save_path2 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename2)
+    save_path2 = os.path.join(PBOOK_UPLOAD_FOLDER, filename2)
 
     filename3 = secure_filename(f"{uuid4().hex}_{imgfile3.filename}")
-    save_path3 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename3)
+    save_path3 = os.path.join(PBOOK_UPLOAD_FOLDER, filename3)
         
     try:
         imgfile1.save(save_path1)
@@ -257,9 +261,9 @@ def add_pbook():
     except Exception as e:
         return jsonify({"error": f"파일 저장 실패: {str(e)}"}), 500
 
-    img_url1 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename1}"
-    img_url2 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename2}"
-    img_url3 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename3}"   
+    img_url1 = f"/{PBOOK_UPLOAD_FOLDER}/{filename1}"
+    img_url2 = f"/{PBOOK_UPLOAD_FOLDER}/{filename2}"
+    img_url3 = f"/{PBOOK_UPLOAD_FOLDER}/{filename3}"   
 
     new_pbook = Pbooktrade(
         pid = pid,
@@ -296,13 +300,13 @@ def add_cbook():
     imgfile3 = request.files.get("imgfile3")
     
     filename1 = secure_filename(f"{uuid4().hex}_{imgfile1.filename}")
-    save_path1 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename1)
+    save_path1 = os.path.join(CBOOK_UPLOAD_FOLDER, filename1)
 
     filename2 = secure_filename(f"{uuid4().hex}_{imgfile2.filename}")
-    save_path2 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename2)
+    save_path2 = os.path.join(CBOOK_UPLOAD_FOLDER, filename2)
 
     filename3 = secure_filename(f"{uuid4().hex}_{imgfile3.filename}")
-    save_path3 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename3)
+    save_path3 = os.path.join(CBOOK_UPLOAD_FOLDER, filename3)
         
     try:
         imgfile1.save(save_path1)
@@ -311,9 +315,9 @@ def add_cbook():
     except Exception as e:
         return jsonify({"error": f"파일 저장 실패: {str(e)}"}), 500
 
-    img_url1 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename1}"
-    img_url2 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename2}"
-    img_url3 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename3}"   
+    img_url1 = f"/{CBOOK_UPLOAD_FOLDER}/{filename1}"
+    img_url2 = f"/{CBOOK_UPLOAD_FOLDER}/{filename2}"
+    img_url3 = f"/{CBOOK_UPLOAD_FOLDER}/{filename3}"   
 
     new_cbook = Cbooktrade(
         cid = cid,
@@ -350,13 +354,13 @@ def add_sbook():
     imgfile3 = request.files.get("imgfile3")
     
     filename1 = secure_filename(f"{uuid4().hex}_{imgfile1.filename}")
-    save_path1 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename1)
+    save_path1 = os.path.join(SBOOK_UPLOAD_FOLDER, filename1)
 
     filename2 = secure_filename(f"{uuid4().hex}_{imgfile2.filename}")
-    save_path2 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename2)
+    save_path2 = os.path.join(SBOOK_UPLOAD_FOLDER, filename2)
 
     filename3 = secure_filename(f"{uuid4().hex}_{imgfile3.filename}")
-    save_path3 = os.path.join(S_IMAGE_UPLOAD_FOLDER, filename3)
+    save_path3 = os.path.join(SBOOK_UPLOAD_FOLDER, filename3)
         
     try:
         imgfile1.save(save_path1)
@@ -365,9 +369,9 @@ def add_sbook():
     except Exception as e:
         return jsonify({"error": f"파일 저장 실패: {str(e)}"}), 500
 
-    img_url1 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename1}"
-    img_url2 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename2}"
-    img_url3 = f"/{S_IMAGE_UPLOAD_FOLDER}/{filename3}"   
+    img_url1 = f"/{SBOOK_UPLOAD_FOLDER}/{filename1}"
+    img_url2 = f"/{SBOOK_UPLOAD_FOLDER}/{filename2}"
+    img_url3 = f"/{SBOOK_UPLOAD_FOLDER}/{filename3}"   
 
     new_sbook = Sbooktrade(
         sid = sid,
