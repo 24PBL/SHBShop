@@ -9,7 +9,6 @@ import threading
 from sqlalchemy import desc
 from werkzeug.utils import secure_filename
 from uuid import uuid4
-from werkzeug.security import generate_password_hash
 from werkzeug.security import generate_password_hash, check_password_hash
 from utils.jwt_helper import token_required
 
@@ -756,14 +755,8 @@ def login():
     if not user:
         return jsonify({"error": "존재하지 않는 계정입니다."}), 404
     
-    if (kind == UserType.PERSONAL.value) or (kind == UserType.COMMERCIAL.value):
-        if not check_password_hash(user.password, password):
-            return jsonify({"error": "비밀번호가 일치하지 않습니다."}), 400
-    elif kind == UserType.ADMIN.value:
-        if user.password != password:
-            return jsonify({"error": "비밀번호가 일치하지 않습니다."}), 400
-    else:
-        return jsonify({"error": "잘못된 유저 유형"}), 404
+    if not check_password_hash(user.password, password):
+        return jsonify({"error": "비밀번호가 일치하지 않습니다."}), 400
 
     if kind == UserType.PERSONAL.value:
         user_id = user.pid

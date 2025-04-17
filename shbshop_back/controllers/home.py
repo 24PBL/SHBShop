@@ -437,8 +437,8 @@ def search_book(decoded_user_id, user_type, userId):
             "shoptel": shop.shoptel,
             "shopimg1": shop.shopimg1,
             "holiday": shop.holiday,
-            "open": shop.open.isoformat(),
-            "close": shop.close.isoformat(),
+            "open": shop.open,
+            "close": shop.close,
             "createAt": shop.createAt.isoformat()
         } for _, shop in favorite_results
     ]
