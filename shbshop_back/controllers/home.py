@@ -85,7 +85,7 @@ def show_user_home(decoded_user_id, user_type, userId):
 
 @home_bp.route("/<int:userId>/<int:pfinidx>/<int:cfinidx>", methods=["GET"])
 @token_required
-def show_user_home(decoded_user_id, user_type, userId, pfinidx, cfinidx):
+def show_user_home_more(decoded_user_id, user_type, userId, pfinidx, cfinidx):
     if str(decoded_user_id) != str(userId):
         return jsonify({"error": "권한이 없습니다."}), 403
     
