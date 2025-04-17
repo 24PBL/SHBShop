@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
 import os
 from dotenv import load_dotenv
 from enum import Enum
@@ -11,10 +11,11 @@ from werkzeug.utils import secure_filename
 from uuid import uuid4
 from werkzeug.security import generate_password_hash
 from werkzeug.security import generate_password_hash, check_password_hash
+from utils.jwt_helper import token_required
 
 # 에디터에서 에러 표시 나와도 무시하면 됩니다.
 # 절대 경로 파악이 안 되는 것. 실행은 정상적으로 됩니다.
-from models import Personal, Commercial, Auth4pjoin, Vaild4pjoin, Auth4cjoin, Vaild4cjoin, Auth4pfpw, Auth4cfpw, Vaild4pfpw, Vaild4cfpw, Commercialcert, Adminacc
+from models import Personal, Commercial, Auth4pjoin, Vaild4pjoin, Auth4cjoin, Vaild4cjoin, Auth4pfpw, Auth4cfpw, Vaild4pfpw, Vaild4cfpw, Auth4pur, Vaild4pur, Auth4cur, Vaild4cur, Commercialcert, Adminacc
 from extensions import db
 from utils import jwt_helper
 
@@ -32,55 +33,82 @@ class UserType(Enum):
     COMMERCIAL = 2
     ADMIN = 3
 
+class UrChocie(Enum):
+    EXECUTE = 1
+    CANCEL = 2
+
 P_PROFILE_UPLOAD_FOLDER = "static/user/personal"
 C_PROFILE_UPLOAD_FOLDER = "static/user/commercial"
 LICENCE_UPLOAD_FOLDER = "static/licence"
 
 def delete_auth_code_4_join(kind, email, authCode):
-    try:
-        kind = int(kind)
-    except (TypeError, ValueError):
-        return jsonify({"error": "유효하지 않은 유형 값입니다."}), 400
+    with current_app.app_context():
+        try:
+            kind = int(kind)
+        except (TypeError, ValueError):
+            return
 
-    try:
-        if kind == UserType.PERSONAL.value:
-            record = db.session.query(Auth4pjoin).filter_by(email=email, authCode=authCode).first()
-        elif kind == UserType.COMMERCIAL.value:
-            record = db.session.query(Auth4cjoin).filter_by(email=email, authCode=authCode).first()
-        else:
-            return jsonify({"error": "잘못된 유저 유형"}), 404
+        try:
+            if kind == UserType.PERSONAL.value:
+                record = db.session.query(Auth4pjoin).filter_by(email=email, authCode=authCode).first()
+            elif kind == UserType.COMMERCIAL.value:
+                record = db.session.query(Auth4cjoin).filter_by(email=email, authCode=authCode).first()
+            else:
+                return
         
-        if record:
-            db.session.delete(record)
-            db.session.commit()
-    except Exception as e:
-        print("삭제 실패:", e)
+            if record:
+                db.session.delete(record)
+                db.session.commit()
+        except Exception as e:
+            pass
 
 def delete_auth_code_4_fpw(kind, email, authCode):
-    try:
-        kind = int(kind)
-    except (TypeError, ValueError):
-        return jsonify({"error": "유효하지 않은 유형 값입니다."}), 400
+    with current_app.app_context():
+        try:
+            kind = int(kind)
+        except (TypeError, ValueError):
+            return
 
-    try:
-        if kind == UserType.PERSONAL.value:
-            record = db.session.query(Auth4pfpw).filter_by(email=email, authCode=authCode).first()
-        elif kind == UserType.COMMERCIAL.value:
-            record = db.session.query(Auth4cfpw).filter_by(email=email, authCode=authCode).first()
-        else:
-            return jsonify({"error": "잘못된 유저 유형"}), 404
+        try:
+            if kind == UserType.PERSONAL.value:
+                record = db.session.query(Auth4pfpw).filter_by(email=email, authCode=authCode).first()
+            elif kind == UserType.COMMERCIAL.value:
+                record = db.session.query(Auth4cfpw).filter_by(email=email, authCode=authCode).first()
+            else:
+                return
         
-        if record:
-            db.session.delete(record)
-            db.session.commit()
-    except Exception as e:
-        print("삭제 실패:", e)
+            if record:
+                db.session.delete(record)
+                db.session.commit()
+        except Exception as e:
+            pass
+
+def delete_auth_code_4_ur(kind, email, authCode):
+    with current_app.app_context():
+        try:
+            kind = int(kind)
+        except (TypeError, ValueError):
+            return
+
+        try:
+            if kind == UserType.PERSONAL.value:
+                record = db.session.query(Auth4pur).filter_by(email=email, authCode=authCode).first()
+            elif kind == UserType.COMMERCIAL.value:
+                record = db.session.query(Auth4cur).filter_by(email=email, authCode=authCode).first()
+            else:
+                return
+        
+            if record:
+                db.session.delete(record)
+                db.session.commit()
+        except Exception as e:
+            pass
 
 def delete_all_auth_code_4_join(kind, email):
     try:
         kind = int(kind)
     except (TypeError, ValueError):
-        return jsonify({"error": "유효하지 않은 유형 값입니다."}), 400
+        return
     
     try:
         if kind == UserType.PERSONAL.value:
@@ -88,7 +116,7 @@ def delete_all_auth_code_4_join(kind, email):
         elif kind == UserType.COMMERCIAL.value:
             records = db.session.query(Auth4cjoin).filter_by(email=email).all()
         else:
-            return jsonify({"error": "잘못된 유저 유형"}), 404
+            return
         
         for record in records:
             db.session.delete(record)
@@ -97,13 +125,13 @@ def delete_all_auth_code_4_join(kind, email):
 
     except Exception as e:
         db.session.rollback()
-        print("삭제 실패:", e)
+        pass
 
 def delete_all_auth_code_4_vaild(kind, email):
     try:
         kind = int(kind)
     except (TypeError, ValueError):
-        return jsonify({"error": "유효하지 않은 유형 값입니다."}), 400
+        return
 
     try:
         if kind == UserType.PERSONAL.value:
@@ -111,7 +139,7 @@ def delete_all_auth_code_4_vaild(kind, email):
         elif kind == UserType.COMMERCIAL.value:
             records = db.session.query(Vaild4cjoin).filter_by(email=email).all()
         else:
-            return jsonify({"error": "잘못된 유저 유형"}), 404
+            return
         
         for record in records:
             db.session.delete(record)
@@ -120,13 +148,13 @@ def delete_all_auth_code_4_vaild(kind, email):
 
     except Exception as e:
         db.session.rollback()
-        print("삭제 실패:", e)
+        pass
 
 def delete_all_auth_code_4_fpw(kind, email):
     try:
         kind = int(kind)
     except (TypeError, ValueError):
-        return jsonify({"error": "유효하지 않은 유형 값입니다."}), 400
+        return
     
     try:
         if kind == UserType.PERSONAL.value:
@@ -134,7 +162,7 @@ def delete_all_auth_code_4_fpw(kind, email):
         elif kind == UserType.COMMERCIAL.value:
             records = db.session.query(Auth4cfpw).filter_by(email=email).all()
         else:
-            return jsonify({"error": "잘못된 유저 유형"}), 404
+            return
     
         for record in records:
             db.session.delete(record)
@@ -143,7 +171,76 @@ def delete_all_auth_code_4_fpw(kind, email):
 
     except Exception as e:
         db.session.rollback()
-        print("삭제 실패:", e)
+        pass
+
+def delete_all_auth_code_4_fpw_vaild(kind, email):
+    try:
+        kind = int(kind)
+    except (TypeError, ValueError):
+        return
+
+    try:
+        if kind == UserType.PERSONAL.value:
+            records = db.session.query(Vaild4pfpw).filter_by(email=email).all()
+        elif kind == UserType.COMMERCIAL.value:
+            records = db.session.query(Vaild4cfpw).filter_by(email=email).all()
+        else:
+            return
+        
+        for record in records:
+            db.session.delete(record)
+
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        pass
+
+def delete_all_auth_code_4_ur(kind, email):
+    try:
+        kind = int(kind)
+    except (TypeError, ValueError):
+        return
+    
+    try:
+        if kind == UserType.PERSONAL.value:
+            records = db.session.query(Auth4pur).filter_by(email=email).all()
+        elif kind == UserType.COMMERCIAL.value:
+            records = db.session.query(Auth4cur).filter_by(email=email).all()
+        else:
+            return
+    
+        for record in records:
+            db.session.delete(record)
+
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        pass
+
+def delete_all_auth_code_4_ur_vaild(kind, email):
+    try:
+        kind = int(kind)
+    except (TypeError, ValueError):
+        return
+
+    try:
+        if kind == UserType.PERSONAL.value:
+            records = db.session.query(Vaild4pur).filter_by(email=email).all()
+        elif kind == UserType.COMMERCIAL.value:
+            records = db.session.query(Vaild4cur).filter_by(email=email).all()
+        else:
+            return
+        
+        for record in records:
+            db.session.delete(record)
+
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+        pass
 
 @auth_bp.route("/join/personal/check-email", methods=["POST"])
 def check_personal_email():
@@ -400,6 +497,8 @@ def commercial_signup():
 
         pdf_url = f"/{LICENCE_UPLOAD_FOLDER}/{pdf_filename}"
 
+        region = address.split()[0] + "-" + address.split()[1]
+
         new_user = Commercial(
             name = name,
             presidentName = presidentName,
@@ -413,7 +512,8 @@ def commercial_signup():
             address = address,
             img=profile_url,
             licence=pdf_url,
-            coNumber=coNumber
+            coNumber=coNumber,
+            region=region
         )
         db.session.add(new_user)
         db.session.commit()
@@ -533,7 +633,7 @@ def check_info_4_fpw():
                 smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
                 smtp.send_message(msg)
             
-            timer = threading.Timer(300.0, delete_auth_code_4_fpw, args=[email, code])  # 5분 = 300초
+            timer = threading.Timer(300.0, delete_auth_code_4_fpw, args=[kind, email, code])  # 5분 = 300초
             timer.start()
 
             return jsonify({"message": f"{email}로 이메일 전송 성공!"}), 201
@@ -618,9 +718,9 @@ def change_pw():
 
     if vaild.authCode == authCode:
         if kind == UserType.PERSONAL.value:
-            delete_all_auth_code_4_vaild(UserType.PERSONAL.value, email)
+            delete_all_auth_code_4_fpw_vaild(UserType.PERSONAL.value, email)
         elif kind == UserType.COMMERCIAL.value:
-            delete_all_auth_code_4_vaild(UserType.COMMERCIAL.value, email)
+            delete_all_auth_code_4_fpw_vaild(UserType.COMMERCIAL.value, email)
         else:
             return jsonify({"error": "잘못된 유저 유형"}), 404
         
@@ -676,3 +776,144 @@ def login():
 
     # 로그인은 jwt만 보냄, 이후에는 jwt로 바로 메인화면 api 호출
     return jsonify({"message": "로그인 성공", "token": token}), 200
+
+@auth_bp.route("/<int:userId>/unregister/check-email", methods=["POST"])
+@token_required
+def check_info_4_ur(decoded_user_id, user_type, userId):
+    if str(decoded_user_id) != str(userId):
+        return jsonify({"error": "권한이 없습니다."}), 403
+    
+    data = request.get_json()
+
+    name = data.get("name")
+    birth = data.get("birth")
+    tel = data.get("tel")
+    email = data.get("email")
+
+    if user_type == UserType.PERSONAL.value:
+        exUser = db.session.query(Personal).filter_by(name=name, birth=birth, tel=tel, email = email).first()
+        reqCount = db.session.query(Auth4pur).filter_by(email=email).count()
+    elif user_type == UserType.COMMERCIAL.value:
+        exUser = db.session.query(Commercial).filter_by(name=name, birth=birth, tel=tel, email = email).first()
+        reqCount = db.session.query(Auth4cur).filter_by(email=email).count()
+    else:
+        return jsonify({"error": "잘못된 유저 유형"}), 404
+
+    if (not exUser):
+        return jsonify({"message": "일치하는 사용자가 없습니다."}), 404
+    elif (exUser) and (reqCount > 3):
+        return jsonify({"message": "인증 요청을 너무 많이 시도했습니다. 잠시 후에 시도해주세요."}), 429
+    elif (exUser) and (reqCount <= 3):
+        code = random.randint(100000, 999999)
+
+        if user_type == UserType.PERSONAL.value:
+            new_auth4ur = Auth4pur(email=email, authCode = code, name=name, birth=birth, tel=tel)
+        elif user_type == UserType.COMMERCIAL.value:
+            new_auth4ur = Auth4cur(email=email, authCode = code, name=name, birth=birth, tel=tel)
+        else:
+            return jsonify({"error": "잘못된 유저 유형"}), 404
+
+        db.session.add(new_auth4ur)
+        db.session.commit()
+
+        try:
+            msg = EmailMessage()
+            msg["Subject"] = "헌책방 회원탈퇴 인증코드입니다."
+            msg["From"] = EMAIL_ADDRESS
+            msg["To"] = email
+            msg.set_content(f"인증코드는 {code}입니다.")
+
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+                smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+                smtp.send_message(msg)
+            
+            timer = threading.Timer(300.0, delete_auth_code_4_ur, args=[user_type, email, code])  # 5분 = 300초
+            timer.start()
+
+            return jsonify({"message": f"{email}로 이메일 전송 성공!", "decoded_user_id": decoded_user_id, "user_type": user_type}), 201
+        except Exception as e:
+            db.session.delete(new_auth4ur)
+            db.session.commit()
+            return jsonify({"error": str(e)}), 500
+    else:
+        return jsonify({"error": "알 수 없는 에러"}), 400
+    
+@auth_bp.route("/<int:userId>/unregister/check-auth-code", methods=["POST"])
+@token_required
+def check_auth_code_4_ur(decoded_user_id, user_type, userId):
+    if str(decoded_user_id) != str(userId):
+        return jsonify({"error": "권한이 없습니다."}), 403
+
+    data = request.get_json()
+    email = data.get("email")
+
+    try:
+        authCode = int(data.get("authCode"))
+    except (TypeError, ValueError):
+        return jsonify({"error": "잘못된 인증코드 형식입니다."}), 400
+    
+    if user_type == UserType.PERSONAL.value:
+        find = db.session.query(Auth4pur).filter_by(email=email).order_by(desc(Auth4pur.idx)).first()
+    elif user_type == UserType.COMMERCIAL.value:
+        find = db.session.query(Auth4cur).filter_by(email=email).order_by(desc(Auth4cur.idx)).first()
+    else:
+        return jsonify({"error": "잘못된 유저 유형"}), 404
+
+    if not find:
+        return jsonify({"message": "회원탈퇴 절차가 올바르지 않음"}), 404
+
+    if find.authCode == authCode:
+        if user_type == UserType.PERSONAL.value:
+            delete_all_auth_code_4_ur(UserType.PERSONAL.value, email)
+            new_vaild = Vaild4pur(email=email, authCode=authCode)
+        elif user_type == UserType.COMMERCIAL.value:
+            delete_all_auth_code_4_ur(UserType.COMMERCIAL.value, email)
+            new_vaild = Vaild4cur(email=email, authCode=authCode)
+        else:
+            return jsonify({"error": "잘못된 유저 유형"}), 404
+        
+        db.session.add(new_vaild)
+        db.session.commit()
+        return jsonify({"message": "이메일 인증 성공", "decoded_user_id": decoded_user_id, "user_type": user_type}), 200
+    else:
+        return jsonify({"message": "인증번호가 올바르지 않습니다."}), 400
+    
+@auth_bp.route("/<int:userId>/unregister/check-final/<email>/<int:authCode>/<int:choice>", methods=["DELETE"])
+@token_required
+def unregister(decoded_user_id, user_type, userId, email, authCode, choice):
+    if str(decoded_user_id) != str(userId):
+        return jsonify({"error": "권한이 없습니다."}), 403
+    
+    if user_type == UserType.PERSONAL.value:
+        exUser = db.session.query(Personal).filter_by(email = email).first()
+        vaild = db.session.query(Vaild4pur).filter_by(email=email).order_by(desc(Vaild4pur.idx)).first()
+    elif user_type == UserType.COMMERCIAL.value:
+        exUser = db.session.query(Commercial).filter_by(email = email).first()
+        vaild = db.session.query(Vaild4cur).filter_by(email=email).order_by(desc(Vaild4cur.idx)).first()
+    else:
+        return jsonify({"error": "잘못된 유저 유형"}), 404
+    
+    if not exUser:
+        return jsonify({"error": "일치하는 회원이 없습니다."}), 404
+
+    if not vaild:
+        return jsonify({"message": "해당 이메일은 인증 과정을 거치지 않았습니다."}), 404
+
+    if vaild.authCode == authCode:
+        if user_type == UserType.PERSONAL.value:
+            delete_all_auth_code_4_ur_vaild(UserType.PERSONAL.value, email)
+        elif user_type == UserType.COMMERCIAL.value:
+            delete_all_auth_code_4_ur_vaild(UserType.COMMERCIAL.value, email)
+        else:
+            return jsonify({"error": "잘못된 유저 유형"}), 404
+        
+        if choice == UrChocie.EXECUTE.value:
+            db.session.delete(exUser)
+            db.session.commit()
+            return jsonify({"message": "회원탈퇴 완료"}), 200
+        elif choice == UrChocie.CANCEL.value:
+            return jsonify({"message": "회원탈퇴 취소"}), 200
+        else:
+            return jsonify({"error": "잘못된 선택 유형"}), 404
+    else:
+        return jsonify({"message": "정상적이지 회원탈퇴 절차"}), 400

@@ -1,8 +1,12 @@
-from typing import Optional
+from typing import Optional, List, TYPE_CHECKING
 from sqlalchemy import BigInteger, String, text, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .base import Base
 import datetime
+
+if TYPE_CHECKING:
+    from .pbooktrade import Pbooktrade
+    from .favorite4p import Favorite4p
 
 class Personal(Base):
     __tablename__ = 'personal'
@@ -18,3 +22,6 @@ class Personal(Base):
     region: Mapped[str] = mapped_column(String(64))
     createAt: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=True), server_default=text('CURRENT_TIMESTAMP'))
     img: Mapped[Optional[str]] = mapped_column(String(255))
+
+    pbooktrade: Mapped[List['Pbooktrade']] = relationship('Pbooktrade', back_populates='personal')
+    favorite4p: Mapped[List['Favorite4p']] = relationship('Favorite4p', back_populates='personal')
