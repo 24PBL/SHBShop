@@ -16,26 +16,27 @@
 	`licence`	varchar(255)	NOT NULL,
 	`state`	int	NOT NULL	DEFAULT 1,
 	`createAt`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `shop` (
 	`sid`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`cid`	bigint	NOT NULL,
 	`presidentName`	varchar(13)	NOT NULL,
 	`businessmanName`	varchar(13)	NOT NULL,
+	`shopName`	varchar(255)	NOT NULL,
 	`shoptel`	varchar(255)	NOT NULL,
 	`businessEmail`	varchar(255)	NOT NULL,
 	`address`	varchar(255)	NOT NULL,
 	`region`	varchar(64)	NOT NULL,
-	`open`	timestamp	NOT NULL,
-	`close`	timestamp	NOT NULL,
-	`hoilday`	varchar(255)	NOT NULL,
+	`open`	varchar(16)	NOT NULL,
+	`close`	varchar(16)	NOT NULL,
+	`holiday`	varchar(255)	NOT NULL,
 	`shopimg1`	varchar(255)	NOT NULL,
 	`shopimg2`	varchar(255)	NOT NULL,
 	`shopimg3`	varchar(255)	NOT NULL,
 	`etc`	varchar(255)	NOT NULL,
 	`createAt`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `auth4pjoin` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -50,7 +51,7 @@ CREATE TABLE `auth4pfpw` (
 	`tel`	varchar(13)	NOT NULL,
 	`email`	varchar(255)	NOT NULL,
 	`authCode`	int	NOT NULL
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `vaild4cfpw` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +71,7 @@ CREATE TABLE `personal` (
 	`region`	varchar(64)	NOT NULL,
 	`img`	varchar(255)	NULL,
 	`createAt`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `commercialcert` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -88,7 +89,7 @@ CREATE TABLE `commercialcert` (
 	`reason`	varchar(255)	NOT NULL	DEFAULT '심사중',
 	`state`	int	NOT NULL	DEFAULT 1,
 	`createAt`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `favorite4p` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -125,7 +126,7 @@ CREATE TABLE `adminacc` (
 	`name`	varchar(13)	NOT NULL,
 	`acc`	varchar(255)	NOT NULL,
 	`password`	varchar(255)	NOT NULL
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `vaild4pjoin` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -140,7 +141,7 @@ CREATE TABLE `auth4cfpw` (
 	`tel`	varchar(13)	NOT NULL,
 	`email`	varchar(255)	NOT NULL,
 	`authCode`	int	NOT NULL
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `auth4pur` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -149,7 +150,7 @@ CREATE TABLE `auth4pur` (
 	`tel`	varchar(13)	NOT NULL,
 	`email`	varchar(255)	NOT NULL,
 	`authCode`	int	NOT NULL
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `auth4cur` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -158,7 +159,7 @@ CREATE TABLE `auth4cur` (
 	`tel`	varchar(13)	NOT NULL,
 	`email`	varchar(255)	NOT NULL,
 	`authCode`	int	NOT NULL
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `vaild4pur` (
 	`idx`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -177,6 +178,7 @@ CREATE TABLE `pbooktrade` (
 	`pid`	bigint	NOT NULL,
 	`title`	varchar(255)	NOT NULL,
 	`author`	varchar(255)	NOT NULL,
+	`publish`	varchar(255)	NOT NULL,
 	`isbn`	varchar(255)	NOT NULL,
 	`price`	int	NOT NULL,
 	`detail`	varchar(255)	NOT NULL,
@@ -185,13 +187,14 @@ CREATE TABLE `pbooktrade` (
 	`img2`	varchar(255)	NOT NULL,
 	`img3`	varchar(255)	NOT NULL,
 	`createAt`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `sbooktrade` (
 	`bid`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`sid`	bigint	NOT NULL,
 	`title`	varchar(255)	NOT NULL,
 	`author`	varchar(255)	NOT NULL,
+	`publish`	varchar(255)	NOT NULL,
 	`isbn`	varchar(255)	NOT NULL,
 	`price`	int	NOT NULL,
 	`detail`	varchar(255)	NOT NULL,
@@ -200,13 +203,14 @@ CREATE TABLE `sbooktrade` (
 	`img2`	varchar(255)	NOT NULL,
 	`img3`	varchar(255)	NOT NULL,
 	`createAt`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE `cbooktrade` (
 	`bid`	bigint	NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`cid`	bigint	NOT NULL,
 	`title`	varchar(255)	NOT NULL,
 	`author`	varchar(255)	NOT NULL,
+	`publish`	varchar(255)	NOT NULL,
 	`isbn`	varchar(255)	NOT NULL,
 	`price`	int	NOT NULL,
 	`detail`	varchar(255)	NOT NULL,
@@ -215,7 +219,7 @@ CREATE TABLE `cbooktrade` (
 	`img2`	varchar(255)	NOT NULL,
 	`img3`	varchar(255)	NOT NULL,
 	`createAt`	timestamp	NOT NULL	DEFAULT CURRENT_TIMESTAMP
-);
+) CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 ALTER TABLE `commercialcert` ADD CONSTRAINT `FK_commercial_TO_commercialcert_1` FOREIGN KEY (
 	`cid`

@@ -179,8 +179,8 @@ def add_shop():
     businessEmail = request.form.get("businessEmail")
     address = request.form.get("address")
     region = address.split()[0] + "-" + address.split()[1]
-    shopOpen = request.form.get("open")
-    shopClose = request.form.get("close")
+    shopOpen = request.form.get("shopOpen")
+    shopClose = request.form.get("shopClose")
     holiday = request.form.get("holiday")
     etc = request.form.get("etc")
     imgfile1 = request.files.get("imgfile1")
@@ -390,3 +390,139 @@ def add_sbook():
     db.session.commit()
 
     return jsonify({"message": "책 추가 완료"}), 201
+
+@test_bp.route("/read-personal/<int:userId>", methods=["GET"])
+def read_personal(userId):
+    exUser = db.session.query(Personal).filter_by(pid = userId).first()
+
+    user = {
+        "name": exUser.name,
+        "birth": exUser.birth,
+        "tel": exUser.tel,
+        "email": exUser.email,
+        "password": exUser.password,
+        "nickname": exUser.nickname,
+        "address": exUser.address,
+        "region": exUser.region,
+        "img": exUser.img,
+        "createAt": exUser.createAt
+    }
+
+    return jsonify({"user": user}), 200
+
+@test_bp.route("/read-commercial/<int:userId>", methods=["GET"])
+def read_commercial(userId):
+    exUser = db.session.query(Commercial).filter_by(cid = userId).first()
+
+    user = {
+        "name": exUser.name,
+        "presidentName": exUser.presidentName,
+        "businessmanName": exUser.businessmanName,
+        "birth": exUser.birth,
+        "tel": exUser.tel,
+        "email": exUser.email,
+        "businessEmail": exUser.businessEmail,
+        "password": exUser.password,
+        "nickname": exUser.nickname,
+        "address": exUser.address,
+        "region": exUser.region,
+        "img": exUser.img,
+        "coNumber": exUser.coNumber,
+        "licence": exUser.licence,
+        "state": exUser.state,
+        "createAt": exUser.createAt
+    }
+
+    return jsonify({"user": user}), 200
+
+@test_bp.route("/read-shop/<int:shopId>", methods=["GET"])
+def read_shop(shopId):
+    exShop = db.session.query(Shop).filter_by(sid = shopId).first()
+
+    shop = {
+        "sid": exShop.sid,
+        "cid": exShop.cid,
+        "presidentName": exShop.presidentName,
+        "businessmanName": exShop.businessmanName,
+        "shopName": exShop.shopName,
+        "shoptel": exShop.shoptel,
+        "businessEmail": exShop.businessEmail,
+        "address": exShop.address,
+        "region": exShop.region,
+        "open": exShop.open,
+        "close": exShop.close,
+        "holiday": exShop.holiday,
+        "shopimg1": exShop.shopimg1,
+        "shopimg2": exShop.shopimg2,
+        "shopimg3": exShop.shopimg3,
+        "etc": exShop.etc,
+        "createAt": exShop.createAt
+    }
+
+    return jsonify({"user": shop}), 200
+
+@test_bp.route("/read-pbook/<int:bookId>", methods=["GET"])
+def read_pbook(bookId):
+    exBook = db.session.query(Pbooktrade).filter_by(bid = bookId).first()
+
+    book = {
+        "bid": exBook.bid,
+        "pid": exBook.pid,
+        "title": exBook.title,
+        "author": exBook.author,
+        "publish": exBook.publish,
+        "isbn": exBook.isbn,
+        "price": exBook.price,
+        "detail": exBook.detail,
+        "region": exBook.region,
+        "img1": exBook.img1,
+        "img2": exBook.img2,
+        "img3": exBook.img3,
+        "createAt": exBook.createAt
+    }
+
+    return jsonify({"user": book}), 200
+
+@test_bp.route("/read-cbook/<int:bookId>", methods=["GET"])
+def read_cbook(bookId):
+    exBook = db.session.query(Cbooktrade).filter_by(bid = bookId).first()
+
+    book = {
+        "bid": exBook.bid,
+        "cid": exBook.cid,
+        "title": exBook.title,
+        "author": exBook.author,
+        "publish": exBook.publish,
+        "isbn": exBook.isbn,
+        "price": exBook.price,
+        "detail": exBook.detail,
+        "region": exBook.region,
+        "img1": exBook.img1,
+        "img2": exBook.img2,
+        "img3": exBook.img3,
+        "createAt": exBook.createAt
+    }
+
+    return jsonify({"user": book}), 200
+
+@test_bp.route("/read-sbook/<int:bookId>", methods=["GET"])
+def read_sbook(bookId):
+    exBook = db.session.query(Sbooktrade).filter_by(bid = bookId).first()
+
+    book = {
+        "bid": exBook.bid,
+        "sid": exBook.sid,
+        "title": exBook.title,
+        "author": exBook.author,
+        "publish": exBook.publish,
+        "isbn": exBook.isbn,
+        "price": exBook.price,
+        "detail": exBook.detail,
+        "region": exBook.region,
+        "img1": exBook.img1,
+        "img2": exBook.img2,
+        "img3": exBook.img3,
+        "createAt": exBook.createAt
+    }
+
+    return jsonify({"user": book}), 200
