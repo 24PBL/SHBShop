@@ -54,6 +54,7 @@ def show_user_home(decoded_user_id, user_type, userId):
             "author": book.author,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.PERSONAL.value
@@ -66,6 +67,7 @@ def show_user_home(decoded_user_id, user_type, userId):
             "author": book.author,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.COMMERCIAL.value
@@ -129,6 +131,7 @@ def show_user_home_more(decoded_user_id, user_type, userId, pfinidx, cfinidx):
             "author": book.author,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.PERSONAL.value
@@ -141,6 +144,7 @@ def show_user_home_more(decoded_user_id, user_type, userId, pfinidx, cfinidx):
             "author": book.author,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.COMMERCIAL.value
@@ -226,6 +230,7 @@ def search_book(decoded_user_id, user_type, userId):
             "publish": book.publish,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.PERSONAL.value
@@ -239,6 +244,7 @@ def search_book(decoded_user_id, user_type, userId):
             "publish": book.publish,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.COMMERCIAL.value
@@ -251,6 +257,7 @@ def search_book(decoded_user_id, user_type, userId):
         "publish": book.publish,
         "price": book.price,
         "region": book.region,
+        "bookimg": book.img1,
         "shopName": shopName,
         "createAt": book.createAt
     } for book, shopName in sbook_results]
@@ -324,6 +331,7 @@ def search_more_book(decoded_user_id, user_type, userId, pfinidx, cfinidx):
             "publish": book.publish,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.PERSONAL.value
@@ -337,6 +345,7 @@ def search_more_book(decoded_user_id, user_type, userId, pfinidx, cfinidx):
             "publish": book.publish,
             "price": book.price,
             "region": book.region,
+            "bookimg": book.img1,
             "nickname": nickname,
             "createAt": book.createAt,
             "userType": UserType.COMMERCIAL.value
@@ -389,6 +398,7 @@ def search_more_sbook(decoded_user_id, user_type, userId, sfinidx):
         "publish": book.publish,
         "price": book.price,
         "region": book.region,
+        "bookimg": book.img1,
         "shopName": shopName,
         "createAt": book.createAt.isoformat()
     } for book, shopName in sbook_results]
